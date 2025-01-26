@@ -1,0 +1,24 @@
+{
+  "name": "weshrink-backend-server",
+  "scripts": {
+    "dev": "bun --watch --hot src/runtime/bun.ts"
+  },
+  "dependencies": {
+    "@auth/core": "^0.37.4",
+    "@auth/drizzle-adapter": "^1.7.4",
+    "@hono/auth-js": "^1.0.15",
+    "@hono/eslint-config": "^1.0.2",
+    "@hono/zod-validator": "^0.4.2",
+    "@libsql/client": "^0.14.0",
+    "drizzle-orm": "^0.38.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "hono": "^4.6.15",
+    "nanoid": "^5.0.9",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.30.1"
+  }
+}
