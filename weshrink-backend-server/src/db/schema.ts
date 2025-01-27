@@ -93,16 +93,14 @@ export const authenticators = sqliteTable(
 
 export const urls = sqliteTable('url', {
   id: integer('id').primaryKey(),
-  url_name: text('url_name'),
-  long_url: text('long_url'),
-  user_id: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  longUrl: text('long_url').notNull(),
+  userID: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   alias: text('alias'),
-  short_code: text('short_code'),
-  shortened_url: text('shortened_url'),
-  expires_at: text('expires_at'),
-  expired: integer('expired', { mode: 'boolean' }),
-  click_count: integer('click_count'),
-  created_at: text('created_at')
+  short: text('short_code').notNull(),
+  expiresAt: text('expires_at').notNull(),
+  expired: integer('expired', { mode: 'boolean' }).notNull(),
+  clickCount: integer('click_count').notNull(),
+  createdAt: text('created_at')
     .notNull()
     .default(sql`(current_timestamp)`),
 })

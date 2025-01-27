@@ -6,11 +6,10 @@ export default function Home() {
     try {
       const res = await client.urls.$post({
         json: {
-          long_url: "https://example.com",
-          shortUrl: "http://localhost:3001/jj",
+          longUrl: "https://example.com",
           alias: "jj",
-          user: "test",
-          url_name: "test",
+          urlName: "jj",
+          userID: "1",
         },
       });
       const data = await res.json();
