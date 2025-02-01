@@ -13,13 +13,14 @@ export default function Home() {
 
     const form = useForm({
         defaultValues: {
-            long_url: "",
-            url_name: null,
+            longUrl: "",
+            urlName: null,
             alias: null,
             user: null,
             shortUrl: ""
         },
     });
+
 
     const submitUrl = async (value: z.infer<typeof createUrlFormSchema>) => {
       console.log(value)
@@ -47,7 +48,7 @@ export default function Home() {
                         >
                             <FormField
                                 control={form.control}
-                                name="long_url"
+                                name="longUrl"
                                 render={({ field }) => (
                                     <FormItem className="w-full flex justify-center">
                                         <FormControl>
