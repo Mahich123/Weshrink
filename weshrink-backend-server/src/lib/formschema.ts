@@ -2,8 +2,10 @@ import { z } from 'zod'
 
 export const createUrlFormSchema = z.object({
   longUrl: z.string().url(),
-  urlName: z.string().nullable(),
-  alias: z.string().nullable(),
-  user: z.string().optional().nullable(),
-  shortUrl: z.string().optional()
+  urlName: z.string(),
+  alias: z.string(),
+  userID: z.string(),
+  expiresAt: z.string(),
 })
+
+export type CreateUrlDataType = z.infer<typeof createUrlFormSchema>
