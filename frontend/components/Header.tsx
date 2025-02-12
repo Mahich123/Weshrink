@@ -3,13 +3,12 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Github } from "lucide-react";
-import { usePathname } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
 
 const Header = () => {
-  const pathname = usePathname()
-  const dashboardNav = pathname === '/dashboard'
+  // const pathname = usePathname()
+  // const dashboardNav = pathname === '/dashboard'
 
   return (
     <div className="max-w-7xl 2xl:max-w-[92vw] mx-auto flex justify-between py-6 px-4 md:px-12 lg:px-16 md:py-12 items-center">
@@ -24,7 +23,7 @@ const Header = () => {
                 height={100} alt="logo" />
             </div>
             <Link href="/sign-up" className="w-[27%] md:w-2/12 lg:w-[13%] 2xl:w-1/12">
-              <Button className="w-full text-xs" variant="primary">
+              <Button className="w-full text-xs" variant="default">
                 Get Started
               </Button>
             </Link>

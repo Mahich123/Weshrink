@@ -1,6 +1,5 @@
 "use client"
 
-import { Loader } from 'lucide-react'
 import Header from "@/components/Header"
 import CreateUrlForm from '@/components/CeateUrlForm'
 

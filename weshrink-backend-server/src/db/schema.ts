@@ -93,8 +93,9 @@ export const authenticators = sqliteTable(
 
 export const urls = sqliteTable('url', {
   id: integer('id').primaryKey(),
+  name: text('name'),
   longUrl: text('long_url').notNull(),
-  userID: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  userID: text('user_id'),
   alias: text('alias'),
   short: text('short_code').notNull(),
   expiresAt: text('expires_at').notNull(),
