@@ -95,9 +95,10 @@ export default function CreateShortURL() {
   });
 
   return (
-    <Form {...form}>
+    <Form {...form} >
       <form
         onSubmit={form.handleSubmit(async (data) => await mutateAsync(data))}
+        className="min-w-[86%]"
       >
         <FormField
           control={form.control}
@@ -110,25 +111,25 @@ export default function CreateShortURL() {
                     isWrong
                       ? "animate-shake bg-[rgb(255,40,40,0.2)] border-red-800 shadow-[0px_0px_15px_rgba(255,_78,_45,_0.7)]"
                       : ""
-                  } h-18 flex w-[95%] items-center space-x-2 rounded-full border-4 border-dashed bg-gray-900 p-1`}
+                  } h-18 flex w-[95%] items-center space-x-2 rounded-full border-4 border-[#1E293B] bg-gray-900 p-1`}
                   onAnimationEnd={() => setIsWrong(false)}
                 >
                   <FaLink className="ml-5 h-10 w-10 text-white" />
 
                   <Input
                     placeholder="Enter The Link Here~"
-                    className="h-10 text-white text-center border-0 bg-transparent focus-visible:ring-0"
+                    className="h-10 text-white border-0 bg-transparent focus-visible:ring-0"
                     {...field}
                   />
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
-                        className="h-14 w-60 gap-x-2 rounded-full text-lg text-black bg-white hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-400 disabled:text-gray-500 disabled:cursor-not-allowed"
+                        className="h-14 w-60 gap-x-2 rounded-full text-lg text-white bg-[#3B82F6]   hover:bg-[#2e64b9] active:bg-gray-300 disabled:bg-gray-400 disabled:text-gray-500 disabled:cursor-not-allowed"
                         disabled={isLoading}
                         type="submit"
                       >
-                        Shorten Now!
+                        Trim Now!
                       </Button>
                     </AlertDialogTrigger>
                     {isSuccess && (

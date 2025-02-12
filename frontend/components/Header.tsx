@@ -23,7 +23,7 @@ const Header = () => {
                 height={100} alt="logo" />
             </div>
             <Link href="/sign-up" className="w-[27%] md:w-2/12 lg:w-[13%] 2xl:w-1/12">
-              <Button className="w-full text-xs" variant="default">
+              <Button className="rounded-lg text-xs bg-[#3B82F6]" variant="default">
                 Get Started
               </Button>
             </Link>
