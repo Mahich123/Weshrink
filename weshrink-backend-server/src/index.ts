@@ -4,11 +4,12 @@ import { nanoid } from 'nanoid'
 import { zValidator } from '@hono/zod-validator'
 import { createUrlFormSchema } from './lib/formschema'
 import {
+  aliasAlreadyUsed,
   createUrl,
   getExistingUrl,
   getExistingUsers,
-  getUrlByShort,
   getUrls,
+  shortAlreadyUsed,
   updateClicks,
 } from './routes/urls/urls'
 
@@ -29,7 +30,7 @@ const app = new Hono()
     let url
 
     try {
-      url = await getUrlByShort(short)
+      url = await getUrls(short)
       console.log(url)
     } catch (error) {
       return c.json({
@@ -83,12 +84,14 @@ const app = new Hono()
           status: 500,
           success: false,
           short: '',
+          message: 'Error getting user',
         })
       }
 
       if (!existingUser[0]) {
         return c.json({
-          message: 'User not found',
+          message:
+            "We couldn't find your user ID in our database. Please verify your credentials.",
           status: 404,
           success: false,
           short: '',
@@ -100,14 +103,28 @@ const app = new Hono()
 
     if (existingUrl[0]) {
       return c.json({
-        message: 'URL already exists',
+        message:
+          'A short URL for this link has already been created. Please use a different URL or delete the existing one. In the meantime, here is the previously generated short URL.',
         status: 409,
-        success: false,
+        success: true,
         short: existingUrl[0].short,
       })
     }
 
-    const short = nanoid(8)
+    if (await aliasAlreadyUsed(alias)) {
+      return c.json({
+        message: 'This alias is already in use. Please choose a different one.',
+        status: 409,
+        success: false,
+        short: '',
+      })
+    }
+
+    let short
+
+    do {
+      short = nanoid(8)
+    } while (await shortAlreadyUsed(short))
 
     try {
       await createUrl(urlName, longUrl, short, expiresAt, userID, alias)
@@ -117,13 +134,14 @@ const app = new Hono()
         status: 500,
         success: false,
         short: '',
+        message: 'Error creating URL',
       })
     }
     return c.json({
-      message: 'URL submitted successfully',
+      message: 'Your short URL has been successfully created.',
       status: 201,
       success: true,
-      short,
+      short: alias || short,
     })
   })
 

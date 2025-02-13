@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { and, eq, or, sql } from 'drizzle-orm'
 import { db } from '../../db'
 import { urls, users } from '../../db/schema'
 
@@ -41,24 +41,35 @@ export async function createUrl(
   console.log('URL created')
 }
 
-export async function getUrls() {
-  return await db.select().from(urls).limit(10)
-}
+export async function getUrls(short?: string) {
+  if (short) {
+    return await db
+      .select()
+      .from(urls)
+      .where(or(eq(urls.alias, short), eq(urls.short, short)))
+      .limit(10)
+  }
 
-export async function getUrlByShort(short: string) {
-  return await db
-    .select()
-    .from(urls)
-    .where(eq(urls.short, short))
-    .limit(1)
+  return await db.select().from(urls).limit(10)
 }
 
 export async function updateClicks(id: number) {
   await db
-  .update(urls)
-  .set({ 
-    clickCount: sql`${urls.clickCount} + 1` 
-  })
-  .where(eq(urls.id, id));
+    .update(urls)
+    .set({
+      clickCount: sql`${urls.clickCount} + 1`,
+    })
+    .where(eq(urls.id, id))
+}
 
+export async function aliasAlreadyUsed(alias: string) {
+  const res = await db.select().from(urls).where(eq(urls.alias, alias)).limit(1)
+
+  return res.length > 0
+}
+
+export async function shortAlreadyUsed(short: string) {
+  const res = await db.select().from(urls).where(eq(urls.short, short)).limit(1)
+
+  return res.length > 0
 }

@@ -133,11 +133,12 @@ export default function CreateShortURL() {
                       </Button>
                     </AlertDialogTrigger>
                     {isSuccess && (
-                      <AlertDialogContent className="max-w-[40%] gap-y-6 border-4 border-white border-dashed bg-gray-900 ">
+                      <AlertDialogContent className={`gap-y-6 border-4 border-white border-dashed bg-gray-900 
+                        ${shortUrl?.success ? '' : 'animate-shake border-red-500'}
+                      `}>
                         <AlertDialogHeader>
                           <AlertDialogTitle className="flex flex-col items-center justify-center text-center text-white">
-                            Congratulation your link has been successfully
-                            created!
+                            {shortUrl?.message}
                           </AlertDialogTitle>
 
                           <CreateSuccessPopup short={shortUrl?.short ?? ""} />
