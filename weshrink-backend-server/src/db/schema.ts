@@ -105,3 +105,5 @@ export const urls = sqliteTable('url', {
     .notNull()
     .default(sql`(current_timestamp)`),
 })
+
+

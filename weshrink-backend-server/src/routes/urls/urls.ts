@@ -73,3 +73,12 @@ export async function shortAlreadyUsed(short: string) {
 
   return res.length > 0
 }
+
+export async function expireUrl(id: number) {
+  await db
+    .update(urls)
+    .set({
+      expired: true,
+    })
+    .where(eq(urls.id, id))
+}

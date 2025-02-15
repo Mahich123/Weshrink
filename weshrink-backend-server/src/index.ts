@@ -6,6 +6,7 @@ import { createUrlFormSchema } from './lib/formschema'
 import {
   aliasAlreadyUsed,
   createUrl,
+  expireUrl,
   getExistingUrl,
   getExistingUsers,
   getUrls,
@@ -48,6 +49,24 @@ const app = new Hono()
       })
     }
     console.log(url[0])
+
+    if (new Date(url[0].expiresAt) < new Date()) {
+      await expireUrl(url[0].id)
+
+      return c.json({
+        error: 'URL has expired',
+        status: 404,
+        url: null,
+      })
+    }
+
+    if (url[0].expired) {
+      return c.json({
+        error: 'URL has expired',
+        status: 404,
+        url: null,
+      })
+    }
 
     try {
       await updateClicks(url[0].id)
