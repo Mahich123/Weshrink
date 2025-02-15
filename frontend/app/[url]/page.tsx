@@ -5,23 +5,21 @@ import { client } from "@/utils/honoClient";
 import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { url: string } }) {
-  try {
-    // Fetch data from the API
-    const res = await client.urls[":short"].$get({
-      param: { short: params.url },
-    });
+  const { url: short } = await params;
 
-    if (res.ok) {
-      const data = await res.json();
-      console.log(data);
+  // Fetch data from the API
+  const res = await client.urls[":short"].$get({
+    param: { short },
+  });
 
-      // Redirect if the URL is valid
-      if (data.url) {
-        redirect(data.url);
-      }
+  if (res.ok) {
+    const data = await res.json();
+    console.log(data);
+
+    // Redirect if the URL is valid
+    if (data.url) {
+      redirect(data.url);
     }
-  } catch (error) {
-    console.error("Failed to fetch URL:", error);
   }
 
   // Fallback UI if the URL is not found or an error occurs
