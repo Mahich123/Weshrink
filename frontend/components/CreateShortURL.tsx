@@ -39,8 +39,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { CreateUrlDataType } from "../../weshrink-backend-server/src/lib/formschema";
-import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import { client } from "@/utils/honoClient";
+import { z } from "zod";
 
 export default function CreateShortURL() {
   const user = {
@@ -71,7 +71,7 @@ export default function CreateShortURL() {
     mutationFn: async (data: CreateUrlDataType) => {
       console.log(data);
 
-      if (!isAbsoluteUrl(data.longUrl)) {
+      if (!z.string().url().safeParse(data.longUrl).success) {
         setIsWrong(true);
         form.resetField("longUrl");
         throw new Error("Wrong url");
@@ -95,7 +95,7 @@ export default function CreateShortURL() {
   });
 
   return (
-    <Form {...form} >
+    <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => await mutateAsync(data))}
         className="min-w-[86%]"
@@ -133,9 +133,15 @@ export default function CreateShortURL() {
                       </Button>
                     </AlertDialogTrigger>
                     {isSuccess && (
-                      <AlertDialogContent className={`gap-y-6 border-4 border-white border-dashed bg-gray-900 
-                        ${shortUrl?.success ? '' : 'animate-shake border-red-500'}
-                      `}>
+                      <AlertDialogContent
+                        className={`gap-y-6 border-4 border-white border-dashed bg-gray-900 
+                        ${
+                          shortUrl?.success
+                            ? ""
+                            : "animate-shake border-red-500"
+                        }
+                      `}
+                      >
                         <AlertDialogHeader>
                           <AlertDialogTitle className="flex flex-col items-center justify-center text-center text-white">
                             {shortUrl?.message}

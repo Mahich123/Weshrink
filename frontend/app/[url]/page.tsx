@@ -4,8 +4,9 @@ import Link from "next/link";
 import { client } from "@/utils/honoClient";
 import { redirect } from "next/navigation";
 
-export default async function Page({ params }: { params: { url: string } }) {
-  const { url: short } = await params;
+
+export default async function Page({ params }: { params: Promise<{ url: string }> }) {
+  const short = (await params).url;
 
   // Fetch data from the API
   const res = await client.urls[":short"].$get({
