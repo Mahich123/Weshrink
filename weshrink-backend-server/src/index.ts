@@ -23,58 +23,119 @@ const app = new Hono()
     }),
   )
 
+  .get('/', async (c) => {
+    return c.html(`<h1>Welcome to My Page</h1>
+    <p>This is a really basic HTML page.</p>`)
+  })
+  .get('/urls', async (c) => {
+    let urls: {
+      id: number
+      name: string | null
+      longUrl: string
+      userID: string | null
+      alias: string | null
+      short: string
+      expiresAt: string
+      expired: boolean
+      clickCount: number
+      createdAt: string
+    }[]
+
+    try {
+      urls = await getUrls()
+      console.log(urls)
+    } catch (error) {
+      return c.json({
+        error: error instanceof Error ? error.message : 'Unknown error',
+        status: 500,
+        urls: null,
+        success: false,
+      })
+    }
+
+    return c.json({
+      message: 'Successfully fetched URLs',
+      status: 200,
+      success: true,
+      urls,
+    })
+  })
   .get('/urls/:short', async (c) => {
     const { short } = c.req.param()
 
     console.log(short)
 
-    let url
+    let url: {
+      id: number
+      name: string | null
+      longUrl: string
+      userID: string | null
+      alias: string | null
+      short: string
+      expiresAt: string
+      expired: boolean
+      clickCount: number
+      createdAt: string
+    }
 
     try {
-      url = await getUrls(short)
-      console.log(url)
+      url = (await getUrls(short))[0]
     } catch (error) {
       return c.json({
         error: error instanceof Error ? error.message : 'Unknown error',
         status: 500,
         url: null,
+        success: false,
       })
     }
 
-    if (!url[0]) {
+    if (!url) {
       return c.json({
         error: 'URL not found',
         status: 404,
         url: null,
+        success: false,
       })
     }
-    console.log(url[0])
 
-    if (new Date(url[0].expiresAt) < new Date()) {
-      await expireUrl(url[0].id)
+    console.log(url)
+
+    if (new Date(url.expiresAt) < new Date()) {
+      await expireUrl(url.id)
 
       return c.json({
         error: 'URL has expired',
         status: 404,
         url: null,
+        success: false,
       })
     }
 
-    if (url[0].expired) {
+    console.log(url.expired)
+    if (url.expired) {
       return c.json({
         error: 'URL has expired',
         status: 404,
         url: null,
+        success: false,
       })
     }
 
     try {
-      await updateClicks(url[0].id)
-    } catch (error) {}
-    console.log(url[0])
+      await updateClicks(url.id)
+    } catch (error) {
+      console.log(error)
+      return c.json({
+        error: error instanceof Error ? error.message : 'Unknown error',
+        status: 500,
+        url: null,
+        success: false,
+      })
+    }
+    console.log(url)
 
     return c.json({
-      url: url[0].longUrl,
+      url,
       status: 200,
       success: true,
       message: 'URL found',
