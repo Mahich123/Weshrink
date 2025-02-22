@@ -23,6 +23,43 @@ const app = new Hono()
     }),
   )
 
+  .get('/', async (c) => {
+    return c.html(`<h1>Welcome to My Page</h1>
+    <p>This is a really basic HTML page.</p>`)
+  })
+  .get('/urls', async (c) => {
+    let urls: {
+      id: number
+      name: string | null
+      longUrl: string
+      userID: string | null
+      alias: string | null
+      short: string
+      expiresAt: string
+      expired: boolean
+      clickCount: number
+      createdAt: string
+    }[]
+
+    try {
+      urls = await getUrls()
+      console.log(urls)
+    } catch (error) {
+      return c.json({
+        error: error instanceof Error ? error.message : 'Unknown error',
+        status: 500,
+        urls: null,
+        success: false,
+      })
+    }
+
+    return c.json({
+      message: 'Successfully fetched URLs',
+      status: 200,
+      success: true,
+      urls,
+    })
+  })
   .get('/urls/:short', async (c) => {
     const { short } = c.req.param()
 
@@ -43,12 +80,12 @@ const app = new Hono()
 
     try {
       url = (await getUrls(short))[0]
-      console.log(url)
     } catch (error) {
       return c.json({
         error: error instanceof Error ? error.message : 'Unknown error',
         status: 500,
         url: null,
+        success: false,
       })
     }
 
@@ -57,6 +94,7 @@ const app = new Hono()
         error: 'URL not found',
         status: 404,
         url: null,
+        success: false,
       })
     }
 
@@ -69,14 +107,17 @@ const app = new Hono()
         error: 'URL has expired',
         status: 404,
         url: null,
+        success: false,
       })
     }
 
+    console.log(url.expired)
     if (url.expired) {
       return c.json({
         error: 'URL has expired',
         status: 404,
         url: null,
+        success: false,
       })
     }
 
@@ -88,6 +129,7 @@ const app = new Hono()
         error: error instanceof Error ? error.message : 'Unknown error',
         status: 500,
         url: null,
+        success: false,
       })
     }
     console.log(url)
