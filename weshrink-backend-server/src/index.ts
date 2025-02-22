@@ -28,10 +28,21 @@ const app = new Hono()
 
     console.log(short)
 
-    let url
+    let url: {
+      id: number
+      name: string | null
+      longUrl: string
+      userID: string | null
+      alias: string | null
+      short: string
+      expiresAt: string
+      expired: boolean
+      clickCount: number
+      createdAt: string
+    }
 
     try {
-      url = await getUrls(short)
+      url = (await getUrls(short))[0]
       console.log(url)
     } catch (error) {
       return c.json({
@@ -41,17 +52,18 @@ const app = new Hono()
       })
     }
 
-    if (!url[0]) {
+    if (!url) {
       return c.json({
         error: 'URL not found',
         status: 404,
         url: null,
       })
     }
-    console.log(url[0])
 
-    if (new Date(url[0].expiresAt) < new Date()) {
-      await expireUrl(url[0].id)
+    console.log(url)
+
+    if (new Date(url.expiresAt) < new Date()) {
+      await expireUrl(url.id)
 
       return c.json({
         error: 'URL has expired',
@@ -60,7 +72,7 @@ const app = new Hono()
       })
     }
 
-    if (url[0].expired) {
+    if (url.expired) {
       return c.json({
         error: 'URL has expired',
         status: 404,
@@ -69,12 +81,19 @@ const app = new Hono()
     }
 
     try {
-      await updateClicks(url[0].id)
-    } catch (error) {}
-    console.log(url[0])
+      await updateClicks(url.id)
+    } catch (error) {
+      console.log(error)
+      return c.json({
+        error: error instanceof Error ? error.message : 'Unknown error',
+        status: 500,
+        url: null,
+      })
+    }
+    console.log(url)
 
     return c.json({
-      url: url[0].longUrl,
+      url,
       status: 200,
       success: true,
       message: 'URL found',
