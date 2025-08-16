@@ -1,0 +1,27 @@
+{
+  "name": "weshrink",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter='*' dev",
+    "dev:frontend": "bun run --filter=frontend dev",
+    "dev:backend": "bun run --filter=backend dev",
+    "build": "bun run --filter='*' build",
+    "build:frontend": "bun run --filter=frontend build",
+    "build:backend": "bun run --filter=backend build",
+    "start": "bun run --filter='*' start",
+    "install:all": "bun install",
+    "lint": "bun run --filter='*' lint",
+    "type-check": "bun run --filter='*' type-check"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
