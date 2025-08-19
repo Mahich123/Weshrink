@@ -30,7 +30,7 @@ export default async function UrlList() {
         | null = null;
 
     try {
-        const res = await client.urls.$get();
+        const res = await client.api.urls.$get();
 
         if (res.ok) {
             urls = (await res.json())?.urls;

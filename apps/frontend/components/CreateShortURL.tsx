@@ -77,7 +77,7 @@ export default function CreateShortURL() {
         throw new Error("Wrong url");
       }
 
-      const res = await client.urls.$post({
+      const res = await client.api.urls.$post({
         json: data,
       });
 

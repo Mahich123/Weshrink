@@ -10,7 +10,7 @@ export default async function Page({
   const short = (await params).url;
 
   // Fetch data from the API
-  const res = await client.urls[":short"].$get({
+  const res = await client.api.urls[":short"].$get({
     param: { short },
   });
 

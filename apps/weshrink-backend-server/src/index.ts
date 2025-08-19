@@ -13,16 +13,19 @@ import {
   shortAlreadyUsed,
   updateClicks,
 } from './routes/urls/urls'
+import { auth } from './lib/auth'
 
-const app = new Hono()
+const app = new Hono().basePath('/api')
   .use(
     '*',
     cors({
       origin: 'http://localhost:3000',
       allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+      credentials: true,
     }),
   )
-
+  .on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw))
   .get('/', async (c) => {
     return c.html(`<h1>Welcome to My Page</h1>
     <p>This is a really basic HTML page.</p>`)
@@ -152,7 +155,7 @@ const app = new Hono()
         id: string
         name: string | null
         email: string | null
-        emailVerified: Date | null
+        emailVerified: boolean | null
         image: string | null
       }[] = []
 
