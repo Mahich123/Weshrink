@@ -1,9 +1,20 @@
 import { and, eq, or, sql } from 'drizzle-orm'
 import { db } from '../../db'
-import { urls, users } from '../../db/schema'
+import { urls, user } from '../../db/schema'
 
 export async function getExistingUsers(userID: string) {
-  return await db.select().from(users).where(eq(users.id, userID)).limit(1)
+  const userData =  await db.select().from(user).where(eq(user.id, userID)).limit(1)
+
+  if (userData.length === 0) {
+    return []
+  }
+  return [{
+    id: userData[0].id,
+    name: userData[0].name,
+    email: userData[0].email,
+    emailVerified: userData[0].emailVerified,
+    image: userData[0].image,
+  }]
 }
 
 export async function getExistingUrl(longUrl: string, userID: string | null) {

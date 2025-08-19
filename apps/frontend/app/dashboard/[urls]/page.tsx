@@ -12,7 +12,7 @@ export default async function Analytics({
   const short = (await params).urls;
 
   console.log(short);
-  const res = await client.urls[":short"].$get({
+  const res = await client.api.urls[":short"].$get({
     param: { short },
   });
 
